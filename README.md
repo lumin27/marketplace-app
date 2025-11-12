@@ -1,4 +1,4 @@
-# 🛒 Marketplace App
+# Marketplace App
 
 A modern, full-featured marketplace application built with Next.js, Supabase, and Tailwind CSS.
 
@@ -13,7 +13,7 @@ A modern, full-featured marketplace application built with Next.js, Supabase, an
 - **Responsive Design** - Mobile-first, modern UI with dark/light mode
 - **Real-time Updates** - Live updates using Supabase real-time features
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -84,7 +84,7 @@ npm run dev
 
 Visit [http://localhost:3000](http://localhost:3000) to see your app!
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 marketplace-app/
@@ -102,7 +102,7 @@ marketplace-app/
 └── styles/               # Global styles
 ```
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Framework**: Next.js 14 with App Router
 - **Language**: TypeScript
@@ -114,7 +114,7 @@ marketplace-app/
 - **Forms**: React Hook Form + Zod
 - **Charts**: Recharts
 
-## 📝 Available Scripts
+## Available Scripts
 
 ```bash
 # Development
@@ -123,7 +123,7 @@ pnpm build        # Build for production
 pnpm start        # Start production server
 pnpm lint         # Run ESLint
 
-## 🔧 Configuration
+## Configuration
 
 ### Tailwind CSS
 
@@ -135,7 +135,7 @@ The app uses Tailwind CSS with custom configuration. The config file is at `tail
 - Server configuration: `lib/supabase/server.ts`
 - Middleware: `lib/supabase/middleware.ts`
 
-## 🚀 Deployment
+##  Deployment
 
 ### Vercel (Recommended)
 
@@ -153,7 +153,7 @@ The app can be deployed to any platform that supports Next.js:
 - DigitalOcean App Platform
 - AWS Amplify
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -161,11 +161,11 @@ The app can be deployed to any platform that supports Next.js:
 4. Test thoroughly
 5. Submit a pull request
 
-## 📄 License
+##  License
 
 This project is licensed under the MIT License.
 
-## 🆘 Troubleshooting
+##  Troubleshooting
 
 ### Common Issues
 

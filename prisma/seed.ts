@@ -1,167 +1,142 @@
-import { PrismaClient, UserRole, ListingStatus } from "@prisma/client";
-import { Decimal } from "@prisma/client/runtime/library";
+import { PrismaClient, ListingStatus, UserRole } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log("🌱 Seeding database...");
+  console.log("Seeding database...");
 
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@example.com" },
-    update: {},
-    create: {
-      email: "admin@example.com",
-      fullName: "Admin User",
-      role: UserRole.ADMIN,
-    },
-  });
-
-  const seller1 = await prisma.user.upsert({
-    where: { email: "seller1@example.com" },
-    update: {},
-    create: {
-      email: "seller1@example.com",
-      fullName: "John Seller",
-      role: UserRole.SELLER,
-    },
-  });
-
-  const seller2 = await prisma.user.upsert({
-    where: { email: "seller2@example.com" },
-    update: {},
-    create: {
-      email: "seller2@example.com",
-      fullName: "Jane Seller",
-      role: UserRole.SELLER,
-    },
-  });
-
-  const buyer1 = await prisma.user.upsert({
-    where: { email: "buyer1@example.com" },
-    update: {},
-    create: {
-      email: "buyer1@example.com",
-      fullName: "Alice Buyer",
-      role: UserRole.BUYER,
-    },
-  });
-
-  const buyer2 = await prisma.user.upsert({
-    where: { email: "buyer2@example.com" },
-    update: {},
-    create: {
-      email: "buyer2@example.com",
-      fullName: "Bob Buyer",
-      role: UserRole.BUYER,
-    },
-  });
-
-  const electronics = await prisma.category.upsert({
-    where: { name: "Electronics" },
-    update: {},
-    create: { name: "Electronics", description: "Phones, laptops, gadgets" },
-  });
-
-  const books = await prisma.category.upsert({
-    where: { name: "Books" },
-    update: {},
-    create: { name: "Books", description: "Fiction and non-fiction books" },
-  });
-
-  const fashion = await prisma.category.upsert({
-    where: { name: "Fashion" },
-    update: {},
-    create: { name: "Fashion", description: "Clothes and accessories" },
-  });
-
-  const phone = await prisma.listing.create({
-    data: {
-      sellerId: seller1.id,
-      categoryId: electronics.id,
-      title: "iPhone 15 Pro",
-      description: "Latest Apple iPhone with amazing features.",
-      price: new Decimal(1200.0),
-      location: "New York",
-      status: ListingStatus.ACTIVE,
-      images: {
-        create: [
-          {
-            imageUrl: "https://picsum.photos/300?random=1",
-            isPrimary: true,
-          },
-          { imageUrl: "https://picsum.photos/300?random=2" },
-        ],
-      },
-    },
-  });
-
-  const novel = await prisma.listing.create({
-    data: {
-      sellerId: seller2.id,
-      categoryId: books.id,
-      title: "The Great Gatsby",
-      description: "Classic novel by F. Scott Fitzgerald.",
-      price: new Decimal(15.99),
-      location: "Los Angeles",
-      status: ListingStatus.ACTIVE,
-      images: {
-        create: [
-          {
-            imageUrl: "https://picsum.photos/300?random=3",
-            isPrimary: true,
-          },
-        ],
-      },
-    },
-  });
-
-  await prisma.favorite.create({
-    data: { userId: buyer1.id, listingId: phone.id },
-  });
-
-  await prisma.favorite.create({
-    data: { userId: buyer2.id, listingId: novel.id },
-  });
-
-  await prisma.message.create({
-    data: {
-      listingId: phone.id,
-      senderId: buyer1.id,
-      receiverId: seller1.id,
-      content: "Is this still available?",
-    },
-  });
-
-  await prisma.message.create({
-    data: {
-      listingId: novel.id,
-      senderId: buyer2.id,
-      receiverId: seller2.id,
-      content: "Can you ship internationally?",
-    },
-  });
-
-  await prisma.listingView.createMany({
+  // --- Users ---
+  const users = await prisma.user.createMany({
     data: [
       {
-        listingId: phone.id,
-        viewerId: buyer1.id,
-        ip: "192.168.1.10",
-        userAgent: "Mozilla/5.0",
+        email: "buyer1@example.com",
+        fullName: "Alice Buyer",
+        role: UserRole.BUYER,
+        profileImageUrl: "https://i.pravatar.cc/150?img=1",
       },
       {
-        listingId: novel.id,
-        viewerId: buyer2.id,
-        ip: "192.168.1.11",
-        userAgent: "Mozilla/5.0",
+        email: "seller1@example.com",
+        fullName: "Bob Seller",
+        role: UserRole.SELLER,
+        profileImageUrl: "https://i.pravatar.cc/150?img=2",
+      },
+      {
+        email: "admin@example.com",
+        fullName: "Charlie Admin",
+        role: UserRole.ADMIN,
+        profileImageUrl: "https://i.pravatar.cc/150?img=3",
+      },
+    ],
+    skipDuplicates: true,
+  });
+
+  // Fetch created users
+  const buyer = await prisma.user.findUnique({
+    where: { email: "buyer1@example.com" },
+  });
+  const seller = await prisma.user.findUnique({
+    where: { email: "seller1@example.com" },
+  });
+
+  // --- Categories ---
+  const categories = await prisma.category.createMany({
+    data: [
+      { name: "Books", description: "All kinds of books" },
+      { name: "Electronics", description: "Gadgets, phones, and more" },
+      { name: "Fashion", description: "Clothes, shoes, accessories" },
+    ],
+    skipDuplicates: true,
+  });
+
+  const booksCategory = await prisma.category.findUnique({
+    where: { name: "Books" },
+  });
+  const electronicsCategory = await prisma.category.findUnique({
+    where: { name: "Electronics" },
+  });
+
+  // --- Listings ---
+  const listings = await prisma.listing.createMany({
+    data: [
+      {
+        sellerId: seller!.id,
+        categoryId: booksCategory!.id,
+        title: "The Great Gatsby",
+        description: "Classic novel in good condition",
+        price: 9.99,
+        location: "New York",
+        status: ListingStatus.ACTIVE,
+      },
+      {
+        sellerId: seller!.id,
+        categoryId: electronicsCategory!.id,
+        title: "iPhone 13 Pro",
+        description: "Used but works perfectly",
+        price: 699.99,
+        location: "San Francisco",
+        status: ListingStatus.ACTIVE,
+      },
+    ],
+    skipDuplicates: true,
+  });
+
+  const gatsbyListing = await prisma.listing.findFirst({
+    where: { title: "The Great Gatsby" },
+  });
+  const iphoneListing = await prisma.listing.findFirst({
+    where: { title: "iPhone 13 Pro" },
+  });
+
+  // --- Listing Images ---
+  await prisma.listingImage.createMany({
+    data: [
+      {
+        listingId: gatsbyListing!.id,
+        imageUrl: "https://placekitten.com/400/400",
+        isPrimary: true,
+      },
+      {
+        listingId: iphoneListing!.id,
+        imageUrl: "https://placekitten.com/500/500",
+        isPrimary: true,
       },
     ],
   });
+
+  // --- Favorites ---
+  await prisma.favorite.create({
+    data: {
+      userId: buyer!.id,
+      listingId: gatsbyListing!.id,
+    },
+  });
+
+  // --- Messages ---
+  await prisma.message.create({
+    data: {
+      listingId: gatsbyListing!.id,
+      senderId: buyer!.id,
+      receiverId: seller!.id,
+      content: "Hi, is this book still available?",
+    },
+  });
+
+  // --- Listing Views ---
+  await prisma.listingView.create({
+    data: {
+      listingId: gatsbyListing!.id,
+      viewerId: buyer!.id,
+      ip: "192.168.1.1",
+      userAgent: "Mozilla/5.0",
+    },
+  });
+
+  console.log("Database seeded successfully!");
 }
 
 main()
   .catch((e) => {
-    console.error("❌ Seed failed", e);
+    console.error(e);
     process.exit(1);
   })
   .finally(async () => {

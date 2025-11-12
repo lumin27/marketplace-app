@@ -499,7 +499,7 @@ export async function deleteUser(userId: string) {
     if (supabaseError) {
       console.error("Supabase Auth deletion error:", supabaseError);
     } else {
-      console.log(`✅ Deleted Supabase Auth user: ${userId}`);
+      console.log(` Deleted Supabase Auth user: ${userId}`);
     }
 
     return { success: true };

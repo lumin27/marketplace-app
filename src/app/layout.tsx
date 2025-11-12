@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
-import { Analytics } from "@vercel/analytics/react";
 import { ToastContainer } from "react-toastify";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
@@ -27,7 +26,6 @@ export default function RootLayout({
           disableTransitionOnChange>
           {children}
         </ThemeProvider>
-        <Analytics />
         <ToastContainer position='bottom-right' theme='dark' />
       </body>
     </html>
