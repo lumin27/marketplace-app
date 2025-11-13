@@ -6,7 +6,6 @@ import {
   Car,
   Home,
   Shirt,
-  Dumbbell,
   BookOpen,
   Heart,
   Wrench,
@@ -48,6 +47,24 @@ const CategoryClient = ({ categories }: CategoryClientProps) => {
   const [searchQuery, setSearchQuery] = React.useState("");
   const router = useRouter();
 
+  const normalizedIcons = React.useMemo(() => {
+    return Object.fromEntries(
+      Object.entries(categoryIcons).map(([key, value]) => [
+        key.toLowerCase().trim(),
+        value,
+      ])
+    ) as Record<string, any>;
+  }, []);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV !== "production") {
+      console.log(
+        "Category names from DB:",
+        categories.map((c) => c.name)
+      );
+    }
+  }, [categories]);
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     router.push(`/browse?search=${encodeURIComponent(searchQuery)}`);
@@ -71,7 +88,19 @@ const CategoryClient = ({ categories }: CategoryClientProps) => {
 
       <div className='flex flex-wrap gap-3 justify-center max-w-4xl mx-auto'>
         {categories.map((category) => {
-          const IconComponent = categoryIcons[category.name] || Home;
+          const rawName = category?.name ?? "";
+          const lookupKey = rawName.toLowerCase().trim();
+          const IconComponent = normalizedIcons[lookupKey] ?? Home;
+
+          if (
+            process.env.NODE_ENV !== "production" &&
+            !normalizedIcons[lookupKey]
+          ) {
+            console.warn(
+              `[CategoryClient] missing icon for category "${rawName}". Using fallback icon.`
+            );
+          }
+
           return (
             <Link
               key={category.id}
