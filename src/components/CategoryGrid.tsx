@@ -4,23 +4,26 @@ import {
   Car,
   Home,
   Shirt,
-  Dumbbell,
   BookOpen,
   Heart,
   Wrench,
+  Activity,
+  Diamond,
 } from "lucide-react";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
 const categoryIcons: Record<string, any> = {
+  Books: BookOpen,
   Electronics: Smartphone,
-  Vehicles: Car,
-  "Home & Garden": Home,
   Fashion: Shirt,
-  "Sports & Recreation": Dumbbell,
-  "Books & Media": BookOpen,
+  "Home & Garden": Home,
   "Pets & Animals": Heart,
   Services: Wrench,
+  Vehicles: Car,
+  "Toys & Games": Activity,
+  "Health & Beauty": Heart,
+  "Jewelry & Watches": Diamond,
 };
 
 export async function CategoryGrid() {
@@ -35,8 +38,15 @@ export async function CategoryGrid() {
     orderBy: { name: "asc" },
   });
 
+  const normalizedIcons = Object.fromEntries(
+    Object.entries(categoryIcons).map(([key, value]) => [
+      key.toLowerCase().trim(),
+      value,
+    ])
+  ) as Record<string, any>;
+
   return (
-    <section className=' dark:bg-gray-900 transition-colors'>
+    <section className='dark:bg-gray-900 transition-colors'>
       <div className='container mx-auto px-4'>
         <div className='flex justify-between mb-6 items-center'>
           <h2 className='text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 transition-colors text-center'>
@@ -47,10 +57,12 @@ export async function CategoryGrid() {
           </button>
         </div>
 
+        {/* Mobile view */}
         <div className='block md:hidden'>
           <div className='flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory'>
             {categories.map((category) => {
-              const IconComponent = categoryIcons[category.name] || Home;
+              const lookupKey = category.name.toLowerCase().trim();
+              const IconComponent = normalizedIcons[lookupKey] ?? Home;
               return (
                 <Link
                   key={category.id}
@@ -77,9 +89,10 @@ export async function CategoryGrid() {
           </div>
         </div>
 
+        {/* Desktop view */}
         <div className='hidden md:grid grid-cols-6 gap-2'>
           {categories.map((category) => {
-            const IconComponent = categoryIcons[category.name] || Home;
+            const IconComponent = categoryIcons[category.name.trim()] || Home;
             return (
               <Link key={category.id} href={getCategoryUrl(category.name)}>
                 <div className='group border rounded-lg bg-white dark:bg-gray-800 hover:shadow-lg transition-shadow cursor-pointer py-4'>

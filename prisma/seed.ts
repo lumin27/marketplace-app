@@ -28,7 +28,7 @@ async function main() {
     await prisma.category.deleteMany({
       where: { name: { in: toDelete } },
     });
-    console.log(`🧹 Removed outdated categories: ${toDelete.join(", ")}`);
+    console.log(` Removed outdated categories: ${toDelete.join(", ")}`);
   }
 
   await prisma.category.createMany({
