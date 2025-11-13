@@ -11,20 +11,24 @@ import {
   Heart,
   Wrench,
   Search,
+  Activity,
+  Diamond,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-const categoryIcons: Record<string, any> = {
+export const categoryIcons: Record<string, any> = {
+  Books: BookOpen,
   Electronics: Smartphone,
-  Vehicles: Car,
-  "Home & Garden": Home,
   Fashion: Shirt,
-  "Sports & Recreation": Dumbbell,
-  "Books & Media": BookOpen,
+  "Home & Garden": Home,
   "Pets & Animals": Heart,
   Services: Wrench,
+  Vehicles: Car,
+  "Toys & Games": Activity,
+  "Health & Beauty": Heart,
+  "Jewelry & Watches": Diamond,
 };
 
 export interface Category {
