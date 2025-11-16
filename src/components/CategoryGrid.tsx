@@ -9,6 +9,7 @@ import {
   Wrench,
   Activity,
   Diamond,
+  DiamondIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
@@ -23,7 +24,7 @@ const categoryIcons: Record<string, any> = {
   Vehicles: Car,
   "Toys & Games": Activity,
   "Health & Beauty": Heart,
-  "Jewelry & Watches": Diamond,
+  "Jewelry & Watches": DiamondIcon,
 };
 
 export async function CategoryGrid() {

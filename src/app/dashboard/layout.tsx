@@ -1,3 +1,7 @@
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+export const revalidate = 0;
+
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { DashboardSidebar } from "@/components/DashboardSidebar";

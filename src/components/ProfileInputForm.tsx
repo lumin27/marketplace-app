@@ -91,8 +91,8 @@ export default function ProfileInputForm({ user }: { user: any }) {
             <Image
               src={preview && preview.length > 0 ? preview : "/noAvatar.png"}
               alt='Profile preview'
-              width={80}
-              height={80}
+              width={100}
+              height={100}
               className='rounded-full object-cover border border-border'
             />
             <input

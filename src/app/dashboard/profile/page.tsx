@@ -1,3 +1,7 @@
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+export const revalidate = 0;
+
 import ProfileInputForm from "@/components/ProfileInputForm";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
